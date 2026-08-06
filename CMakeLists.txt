@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.15)
-project(Neural VERSION 1.0 LANGUAGES CXX)
+project(Neural VERSION 0.3.0 LANGUAGES CXX)
 
 add_executable(Neural src/main.cpp)
 
