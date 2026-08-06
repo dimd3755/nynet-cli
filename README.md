@@ -1,8 +1,11 @@
 # 🧠 Neural Network
+![C++](https://shields.io)
+![License](https://shields.io)
+![Build](https://shields.io)
 
-A personal project which uses no external libs but only the 'std' one.
+A lightweight, dependency-free C++ Neural Network built entirely from scratch using only the standard library (`std`). 
 
-It is made for data analysis and probability calculation mostly, but currently I am going to use it for experiments to see it's potential.
+This project was developed as a hands-on educational exercise to deeply understand and implement the underlying mathematics of artificial neural networks—specifically forward propagation, backpropagation, and activation functions—without relying on heavy frameworks like PyTorch or TensorFlow.
 
 # Requirements
 1. (*Optional*) [**Git**](https://git-scm.com/install/) for cloning the project.
@@ -48,6 +51,27 @@ It is pretty easy to use NeuralNetwork class as it only has 4 functions, with th
 * **`train()`** which uses the **'forward'** function to calculate the output then compare with the **target** to make adjustments, and its parameters are **`const std::vector<double>& target, const std::vector<double>& inputs`**, where the 'inputs' is the training data, and the 'target' is the desired output.
 
 * **`get_output()`** which returns the output of the `train()` or `forward()` functions, it takes no parameters, and it's value is returned as read-only.
+
+Here is a quick example of training the model to do the XOR operation:
+
+``` cpp
+#include "Neural.hpp"
+#include <vector>
+
+int main() {
+    // 2 Inputs, 3 Neurons as middle layer, 1 output
+    NeuralNetwork nn(2, 3, 1, 0.1);
+
+    std::vector<double> inputs = {1.0, 0.0};
+    std::vector<double> target = {1.0};
+
+    nn.train(target, inputs); //Training the model
+
+    std::vector<double> output = nn.get_output(); //Gets training output
+    return 0;
+}
+```
+
 
 # ⏳Up-coming features
 Since this current repository is lacking many features to make it achieve its purpose as a tool for analysis and experiments, expect some features on next updates. Some of the features are:
