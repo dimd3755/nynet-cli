@@ -60,7 +60,7 @@ Here is a quick example of training the model to do the XOR operation:
 #include <vector>
 
 int main() {
-    // 2 Inputs, 3 Neurons as middle layer, 1 output
+    // 2 Inputs, 3 Neurons as middle layer, 1 output, 0.1 learning rate (default)
     NeuralNetwork nn(2, 3, 1, 0.1);
 
     std::vector<double> inputs = {1.0, 0.0};
