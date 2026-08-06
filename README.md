@@ -1,7 +1,8 @@
 # 🧠 Neural Network
-![C++](img.shields.io)
-![License](img.shields.io)
-![Build](img.shields.io)
+![Static Badge](https://img.shields.io/badge/Version-v0.3.0-yellow)
+![Static Badge](https://img.shields.io/badge/License-Apache%202.0-yellow)
+![Static Badge](https://img.shields.io/badge/Build-passing-green)
+
 
 A lightweight, dependency-free C++ Neural Network built entirely from scratch using only the standard library (`std`). 
 
