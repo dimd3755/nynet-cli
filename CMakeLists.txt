@@ -5,5 +5,5 @@ add_executable(Neural src/main.cpp)
 
 include_directories(Neural
     PRIVATE 
-        include/Neural
+        include
 )
