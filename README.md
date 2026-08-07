@@ -1,5 +1,5 @@
 # 🧠 Neural Network
-![Static Badge](https://img.shields.io/badge/Version-v0.3.0-yellow)
+![Static Badge](https://img.shields.io/badge/Version-v0.4.2-yellow)
 ![Static Badge](https://img.shields.io/badge/License-Apache%202.0-yellow)
 ![Static Badge](https://img.shields.io/badge/Build-passing-green)
 
@@ -38,14 +38,14 @@ The class mentioned above has 3 Layers which all 3 have customisable sizes, and 
 
 1. **Input Layer**: which is a vector holding values with a constant type of 'double', so incase you want to input something in the network you would have to cast it to double.
 
-2. **Middle Layer**: which's main purpose is data and feature extraction, storage, and also helps the network to solve more complex calculations. This layer uses the ReLU activation function.
+2. **Middle Layer**: which's main purpose is data and feature extraction, storage, and also helps the network to solve more complex calculations. This layer uses the ReLU activation function by default.
 
 3. **Output Layer**: which is the result of the calculation, it is essential for giving feedback back to the network for adjustments. This layer uses the Sigmoid activation function.
 
 # ▶ Usage 
 It is pretty easy to use NeuralNetwork class as it only has 4 functions, with them being:
 
-* **`NeuralNetwork()`** being the constructor, the parameters it takes is **`const size_t& num_inputs, const size_t& hidden_num_inputs, const size_t& num_outputs, const double& lr = 0.1`**, which is basically the size of the 1st layer (input), the 2nd layer (middle), the 3rd layer (output), and the learning rate (which is optional since 0.1 is set by default).
+* **`NeuralNetwork()`** being the constructor, the parameters it takes is **`const size_t& input_num_neurons, const size_t& hidden_num_neurons, const size_t& output_num_neurons, const size_t& hidden_amount=1, const double& lr=0.01`**, which is basically the size of the 1st layer (input), the 2nd layer (middle), the 3rd layer (output), the amount of the middle layers (optional because it is set to 1 by default), and the learning rate (which is optional since 0.01 is set by default).
 
 * **`forward()`** which takes as parameter **`const std::vector<double>& inputs`** being the input vector to calculate the output.
 
@@ -60,8 +60,8 @@ Here is a quick example of training the model to do the XOR operation:
 #include <vector>
 
 int main() {
-    // 2 Inputs, 3 Neurons as middle layer, 1 output, 0.1 learning rate (default)
-    NeuralNetwork nn(2, 3, 1, 0.1);
+    // 2 Neurons for Inputs, 3 Neurons for middle layer, 1 neuron for output, 1 Middle Layer, 0.01 learning rate (default)
+    NeuralNetwork nn(2, 3, 1, 1, 0.01);
 
     std::vector<double> inputs = {1.0, 0.0};
     std::vector<double> target = {1.0};
@@ -74,10 +74,10 @@ int main() {
 ```
 
 
-# ⏳Up-coming features
+# ⏳ Up-coming features
 Since this current repository is lacking many features to make it achieve its purpose as a tool for analysis and experiments, expect some features on next updates. Some of the features are:
 
-* Customisable amount of layers: which would be essential to make it calculate more complex problems.
+* Customisable activation functions: currently it uses ReLU for middle layers and Sigmoid for output layer, but it will let users to pass functions for the middle and output layers, and also have more options for different functions like Leaky ReLU, Linear, GeLU, SoftMax etc.
 
 * Saved adjustments and settings: it will read a file input and will adjust the bias and weights of the neurons, aswell as the sizes and length of the layers, as instructed to continue the training from where you left.
 

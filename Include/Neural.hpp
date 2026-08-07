@@ -9,7 +9,9 @@ struct Neuron {
     private:
         double bias{};
         double output{};
-    
+
+        double linear(const std::vector<double>& inputs);
+
     public:
         std::vector<double> weights;
 
@@ -37,12 +39,12 @@ struct Layer {
 
 class NeuralNetwork {
     private:
-        Layer hidden;
+        std::vector<Layer> hidden;
         Layer output;
         double learning_rate;
 
     public:
-        NeuralNetwork(const size_t& num_inputs, const size_t& hidden_num_inputs, const size_t& num_outputs, const double& lr = 0.1);
+        NeuralNetwork(const size_t& input_num_neurons, const size_t& hidden_num_neuron, const size_t& output_num_neurons, const size_t& hidden_amount=1, const double& lr=0.01);
 
         void forward(const std::vector<double>& inputs);
         void train(const std::vector<double>& target, const std::vector<double>& inputs);
