@@ -45,9 +45,9 @@ The class mentioned above has 3 Layers which all 3 have customisable sizes, and 
 # ▶ Usage 
 It is pretty easy to use NeuralNetwork class as it only has 4 functions, with them being:
 
-* **'NeuralNetwork()'** being the constructor, the parameters it takes is **`const size_t& num_inputs, const size_t& hidden_num_inputs, const size_t& num_outputs, const double& lr = 0.1`**, which is basically the size of the 1st layer (input), the 2nd layer (middle), the 3rd layer (output), and the learning rate (which is optional since 0.1 is set by default).
+* **`NeuralNetwork()`** being the constructor, the parameters it takes is **`const size_t& num_inputs, const size_t& hidden_num_inputs, const size_t& num_outputs, const double& lr = 0.1`**, which is basically the size of the 1st layer (input), the 2nd layer (middle), the 3rd layer (output), and the learning rate (which is optional since 0.1 is set by default).
 
-* **'forward()'** which takes as parameter **`const std::vector<double>& inputs`** being the input vector to calculate the output.
+* **`forward()`** which takes as parameter **`const std::vector<double>& inputs`** being the input vector to calculate the output.
 
 * **`train()`** which uses the **'forward'** function to calculate the output then compare with the **target** to make adjustments, and its parameters are **`const std::vector<double>& target, const std::vector<double>& inputs`**, where the 'inputs' is the training data, and the 'target' is the desired output.
 
