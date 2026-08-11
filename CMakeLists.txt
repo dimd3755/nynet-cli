@@ -3,7 +3,9 @@ project(Neural VERSION 0.4.2 LANGUAGES CXX)
 
 add_executable(Neural 
     src/main.cpp
-    include/Neural.cpp
+    src/core/Layer.cpp
+    src/core/NeuralNetwork.cpp
+    src/core/Neuron.cpp
 )
 
 include_directories(Neural

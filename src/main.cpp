@@ -1,46 +1,51 @@
 #include "Neural.hpp"
 #include <cstddef>
-#include <vector>
 #include <iostream>
-
-template <class T>
-void printVec(const std::vector<T>& vec);
+#include <vector>
 
 int main() {
-    std::cout << "Start" << std::endl;
-    
-    NeuralNetwork nn(2, 3, 1);
+    // 2 Neurons for inputs, 4x2 hidden layers, 1 output, RELU activation type for hidden, Sigmoid for output
+    // learning rate is set 0.01
+    NeuralNetwork nn(2, {4, 4}, 1, activate_type::RELU, activate_type::SIGMOID, 0.01);
 
-    std::vector<std::vector<double>> training_data = {
+    std::vector<std::vector<double>> x = 
+    {
+        {0.0, 0.0},
+        {0.0, 1.0},
         {1.0, 0.0},
-        {0.0, 0.0}
+        {1.0, 1.0},
     };
 
-    std::vector<std::vector<double>> target_data = {
+    std::vector<std::vector<double>> y =
+    {
+        {0.0},
+        {1.0},
         {1.0},
         {0.0}
     };
 
-    for (size_t i = 0; i < 20; ++i) {
-        for (size_t j = 0; j < training_data.size(); ++j) {
-            nn.train(target_data[j], training_data[j]);
+    // Training
+    for (size_t i = 0; i < 10000; ++i) {
+        for (size_t j = 0; j < x.size(); ++j) {
+            nn.train(x[j], y[j]);
         }
     }
-    nn.forward({1.0, 1.0});
 
-    printVec<double>(nn.get_output());
+    // Testing 
+    std::vector<std::vector<double>> inputs = {
+        {0.0, 0.0},
+        {0.0, 1.0},
+        {1.0, 0.0},
+        {1.0, 1.0}
+    };
+    
+    for (size_t i = 0; i < inputs.size(); ++i) {
+        nn.forward(inputs[i]);
+        std::vector<double> output = nn.get_output();
+        std::cout << "Prediction of {" << inputs[i][0] << ", " << inputs[i][1] << "}: ";
+        for (auto& prediction: output) {
+            std::cout << prediction << '\n';
+        }
+    }
     return 0;
-}
-
-template <class T>
-void printVec(const std::vector<T>& vec) {
-    std::cout << '[';
-    for (auto& c: vec) {
-        if (c == vec[0]) {
-            std::cout << c;
-        } else {
-            std::cout << ", " << c;
-        }
-    }
-    std::cout << ']' << '\n';
 }
