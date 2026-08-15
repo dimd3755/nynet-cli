@@ -48,24 +48,41 @@ void NeuralNetwork::forward(const std::vector<double>& inputs) {
     output.forward(*current_inputs);
 }
 
-void NeuralNetwork::train(const std::vector<double>& inputs, const std::vector<double>& target) {
+Logln NeuralNetwork::train(const std::vector<double>& inputs, const std::vector<double>& target) {
+    Logln logln;
+    logln.finished_successfully = true; // setting 'finished_successfully' bool to true by default
+    logln.target = target; // (1/4) note target inside logs (finished_successfully doesnt count)
     this->forward(inputs);
 
     if (target.size() != output.get_output().size()) {
-        std::cerr << "NeuralNetwork::train: target.size() ! output.get_output().size()" << '\n';
-        return;
+        std::cerr << "NeuralNetwork::train: target.size() != output.get_output().size()" << '\n';
+        logln.finished_successfully = false;
+        return logln;
     }
 
-    // 'Outputs of output layer and gradient of output layer' sector
+    // Outputs and output gradients
     std::vector<double> output_out = output.get_output(); // Fills output_out with the outputs of the output layer
     std::vector<double> output_out_grads(output_out.size());
 
-    // Filling gradients of output_out_grads
+    logln.output = output_out; // (2/4) note output inside logs
+
+    // Filling output gradients
+    std::vector<double> errors; // capturing output errors (for logln notes)
+    errors.reserve(output_out.size());
     for (size_t i = 0; i < output_out_grads.size(); ++i) {
         output_out_grads[i] = gradient(ofunc, output_out[i], target[i]);
+        errors.push_back(output_out[i] - target[i]);
     }
 
-    // 'Hidden layer outputs and hidden layer gradients' sector
+    // Getting average loss for logln.loss
+    double err_sum = 0.0;
+    for (auto& err: errors) {
+        err_sum += err;
+    }
+
+    logln.loss = err_sum / errors.size(); //(3/4) noted average loss
+
+    // Hidden and hidden gradients
     std::vector<std::vector<double>> hidden_outs(hidden.size());
     std::vector<std::vector<double>> hidden_outs_grads(hidden.size());
 
@@ -80,14 +97,14 @@ void NeuralNetwork::train(const std::vector<double>& inputs, const std::vector<d
     }
 
     // Filling the hidden gradients
-    for (long long i = static_cast<long long>(hidden_outs_grads.size()) - 1; i >= 0; --i) {
-        for (size_t j = 0; j < hidden[i].neurons.size(); ++j) {
+    for (long long i = static_cast<long long>(hidden_outs_grads.size()) - 1; i >= 0; --i) { // For ever layer (backwards)
+        for (size_t j = 0; j < hidden[i].neurons.size(); ++j) { // For every neuron in layer
             double err_sum = 0.0;
-            if (i == hidden_outs_grads.size() - 1) {
+            if (i == hidden_outs_grads.size() - 1) { // If this hidden layer has output layer infront of it
                 for (size_t h = 0; h < output.neurons.size(); ++h) {
                     err_sum += output_out_grads[h] * output.neurons[h].weights[j];
                 }
-            } else {
+            } else { // If this hidden layer has a hidden layer infront of it
                 for (size_t h = 0; h < hidden[i+1].neurons.size(); ++h) {
                     err_sum += hidden_outs_grads[i+1][h] * hidden[i+1].neurons[h].weights[j];
                 }
@@ -97,13 +114,13 @@ void NeuralNetwork::train(const std::vector<double>& inputs, const std::vector<d
         }
     }
 
-    // 'Updating neurons' sector
+    // Updates
     // Updating output layer
     if (hidden.empty()) { // Case where the next layer after the current hidden is the output layer
         for (size_t i = 0; i < output.neurons.size(); ++i) {
             output.neurons[i].update(output_out_grads[i], learning_rate, inputs);
         }   
-        return; // Because it has no hidden layers to update after that
+        return logln; // Because it has no hidden layers to update after that
     } else { // Case where the next layer after the current hidden is another hidden layer
         for (size_t i = 0; i < output.neurons.size(); ++i) {
             output.neurons[i].update(output_out_grads[i], learning_rate, hidden_outs.back());
@@ -120,6 +137,8 @@ void NeuralNetwork::train(const std::vector<double>& inputs, const std::vector<d
             }
         }
     }
+
+    return logln; // Epoch index variable will be handled by the main.cpp implementation
 }
 
 bool NeuralNetwork::save(std::ofstream& file_out) {

@@ -24,6 +24,15 @@ enum class activate_type : int {
     TANH = 2,
 };
 
+struct Logln {
+    std::vector<double> target;
+    std::vector<double> output;
+    double loss;
+    size_t epoch;
+
+    bool finished_successfully;
+};
+
 struct Neuron {
     private:
         double bias{};
@@ -84,7 +93,7 @@ class NeuralNetwork {
              const activate_type& hidden_func=activate_type::RELU, const activate_type& output_func=activate_type::SIGMOID, const double& lr=0.001);
 
         void forward(const std::vector<double>& inputs) ;
-        void train(const std::vector<double>& inputs, const std::vector<double>& target);
+        Logln train(const std::vector<double>& inputs, const std::vector<double>& target);
         bool save(std::ofstream& file_out);
         bool load(std::ifstream& file_in);
         const std::vector<double>& get_output() const;

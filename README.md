@@ -1,12 +1,24 @@
-# Neural Network
-![Static Badge](https://img.shields.io/badge/Version-v0.6.4-yellow)
-![Static Badge](https://img.shields.io/badge/License-Apache%202.0-yellow)
-![Static Badge](https://img.shields.io/badge/Build-passing-green)
+# nynet-cli
+![Static Badge](https://img.shields.io/badge/release-v0.8.1-yellow)
+![Static Badge](https://img.shields.io/badge/license-Apache%202.0-yellow)
+![Static Badge](https://img.shields.io/badge/build-passing-green)
 
+This tool was created as an experiment project having to do with Artificial Intelligence, it is a lightweight CLI tool whose purpose is portability and data analysis
 
-A lightweight, dependency-free C++ Neural Network built entirely from scratch using only the standard library (`std`). 
+# Features
+- **Lightweight & Dependency-Free** - Built entirely with C++ standard library (except CLI11 for command parsing and nlohmann/json for data serialization)
+- **Portable CLI Interface** - Easy-to-use command-line tool with built-in help system
+- **Flexible Network Architecture** - Support for multiple hidden layers with customizable sizes and activation functions
+- **Three Activation Functions** - ReLU, Sigmoid, and Tanh
+- **Complete Training Pipeline** - Create networks, train with data, and evaluate on test sets
+- **JSONL Data Format** - Human-readable text format for training and test data
+- **Logging Support** - Track training progress with loss metrics and model outputs
+- **Binary State Persistence** - Save and load trained networks for reuse
 
-This project was developed as a hands-on educational exercise to deeply understand and implement the underlying mathematics of artificial neural networks—specifically forward propagation, backpropagation, and activation functions—without relying on heavy frameworks like PyTorch or TensorFlow.
+# Credits
+This tool was created using the listed dependencies:
+* [nlohmann/json](https://github.com/nlohmann.json) for json format support
+* [CLI11](https://github.com/cliutils/cli11) for CLI tool support
 
 # Requirements
 1. (*Optional*) [**Git**](https://git-scm.com/install/) for cloning the project.
@@ -29,95 +41,211 @@ Once you are inside the repository, use cmake to build the project:
 
     cmake --build .
 
-and you will find the executable.
+and you will find the executable inside build/ folder.
 
-# Features
-It offers a 'NeuralNetwork' which is the highest level implementation of 'Layer' and 'Neuron' structs.
+# Documentation
 
-The class mentioned above has 3 Layers which all 3 have customisable sizes, and they are:
+## Overview
+`nynet-cli` is a command-line tool for creating, training, and testing neural networks. It provides three main subcommands:
+- **`new`** - Creates and initializes a new neural network from a configuration file
+- **`train`** - Trains an existing neural network using training data
+- **`test`** - Evaluates a trained network on test data
 
-1. **Input Layer**: which is a vector holding values with a constant type of 'double', so incase you want to input something in the network you would have to cast it to double.
-
-2. **Middle Layer**: which's main purpose is data and feature extraction, storage, and also helps the network to solve more complex calculations. This layer uses the ReLU activation function by default.
-
-3. **Output Layer**: which is the result of the calculation, it is essential for giving feedback back to the network for adjustments. This layer uses the Sigmoid activation function.
-
-# Usage 
-It is pretty easy to use NeuralNetwork class as it only has 4 functions, with them being:
-
-* **`NeuralNetwork()`** being the constructor, the parameters it takes is **`const size_t& input_num_neurons, const std::vector<size_t>& hidden_neuron_sizes, const size_t& output_num_neurons, const activate_type& hidden_func=activate_type::RELU, const activate_type& output_func=activate_type::SIGMOID, const double& lr=0.001`**, where the 1st parameter is the neuron amount of input layer, the next is the hidden layer vector which is how many neurons will each layer have and how many hidden layers are, the 3rd is the amount of neurons for the output, next we have the activation type for hidden layer, and then the activation type for the output layer, and lastly the learning rate, which is 0.001 by default.
-
-* **`forward()`** which takes as parameter **`const std::vector<double>& inputs`** being the input vector to calculate the output.
-
-* **`train()`** which uses the **'forward'** function to calculate the output then compare with the **target** to make adjustments, and its parameters are **`const std::vector<double>& inputs, const std::vector<double>& target`**, where the 'inputs' is the training data, and the 'target' is the desired output.
-
-* **`get_output()`** which returns the output of the `train()` or `forward()` functions, it takes no parameters, and it's value is returned as read-only.
-
-Here is an example of training the model to do the XOR operation:
-
-``` cpp
-#include "Neural.hpp"
-#include <cstddef>
-#include <iostream>
-#include <vector>
-
-int main() {
-    // 2 Neurons for inputs, 4x2 hidden layers, 1 output, RELU activation type for hidden, Sigmoid for output
-    // learning rate is set 0.01
-    NeuralNetwork nn(2, {4, 4}, 1, activate_type::RELU, activate_type::SIGMOID, 0.01);
-
-    std::vector<std::vector<double>> x = 
-    {
-        {0.0, 0.0},
-        {0.0, 1.0},
-        {1.0, 0.0},
-        {1.0, 1.0},
-    };
-
-    std::vector<std::vector<double>> y =
-    {
-        {0.0},
-        {1.0},
-        {1.0},
-        {0.0}
-    };
-
-    // Training
-    for (size_t i = 0; i < 10000; ++i) {
-        for (size_t j = 0; j < x.size(); ++j) {
-            nn.train(x[j], y[j]);
-        }
-    }
-
-    // Testing 
-    std::vector<std::vector<double>> inputs = {
-        {0.0, 0.0},
-        {0.0, 1.0},
-        {1.0, 0.0},
-        {1.0, 1.0}
-    };
-    
-    for (size_t i = 0; i < inputs.size(); ++i) {
-        nn.forward(inputs[i]);
-        std::vector<double> output = nn.get_output();
-        std::cout << "Prediction of {" << inputs[i][0] << ", " << inputs[i][1] << "}: ";
-        for (auto& prediction: output) {
-            std::cout << prediction << '\n';
-        }
-    }
-    return 0;
-}
-
+## Getting Help
+View help for the entire CLI or specific commands:
+```bash
+nynet --help              # View all available commands
+nynet new --help          # View options for 'new' command
+nynet train --help        # View options for 'train' command
+nynet test --help         # View options for 'test' command
 ```
 
-# Up-coming features
-Since this current repository is lacking many features to make it achieve its purpose as a tool for analysis and experiments, expect some features on next updates. Some of the features are:
+## Commands
 
-* More activation functions: there will be more than just ReLU, Sigmoid, and Tanh, functions like GeLU, Leaky ReLU, and Softmax are upcoming.
+### 1. `new` - Create a Neural Network
+Creates a new neural network from a JSONL configuration file and saves its initial state.
 
-* Training data file support: which will increase the portability of the tool making it able to hold different training sets
+**Syntax:**
+```bash
+nynet new -s <source> -d <destination>
+```
 
-* Output data file support: which will make it easier to handle large results in a single file.
+**Options:**
+- `-s, --src <path>` **(required)** - Path to the network configuration file (JSONL format)
+- `-d, --dst <path>` **(required)** - Path where the network state will be saved (binary format)
 
-# Summary
-This tool will be pretty useful in the future for solving many problems and making predictions, it offers high level functions, while it also offers portability for different purposes.
+**Configuration File Format (JSONL):**
+```jsonl
+{"inputs": 2, "hidden": [4, 4], "outputs": 1, "hidden_func": "relu", "outputs_func": "sigmoid", "lr": 0.01}
+```
+
+**Parameters:**
+- `inputs` - Number of input neurons
+- `hidden` - Array of hidden layer sizes (e.g., [4, 4] creates two hidden layers with 4 neurons each)
+- `outputs` - Number of output neurons
+- `hidden_func` - Activation function for hidden layers: `relu`, `sigmoid`, or `tanh`
+- `outputs_func` - Activation function for output layer: `relu`, `sigmoid`, or `tanh`
+- `lr` - Learning rate (typically 0.001 to 0.1)
+
+**Example:**
+```bash
+nynet new -s network_config.jsonl -d network.bin
+```
+
+### 2. `train` - Train a Neural Network
+Trains an existing neural network using training data and optionally saves logs.
+
+**Syntax:**
+```bash
+nynet train -s <state> -f <file> [-e <epoch>] [-l <logs>]
+```
+
+**Options:**
+- `-s, --state <path>` **(required)** - Path to the network state file (created with `new` command)
+- `-f, --file <path>` **(required)** - Path to training data file (JSONL format)
+- `-e, --epoch <number>` **(optional)** - Number of training epochs (default: 1)
+- `-l, --logs <path>` **(optional)** - Path where training logs will be saved (JSONL format)
+
+**Training Data Format (JSONL):**
+Each line contains one training sample:
+```jsonl
+{"x": [0.0, 0.0], "y": [0.0]}
+{"x": [0.0, 1.0], "y": [1.0]}
+{"x": [1.0, 0.0], "y": [1.0]}
+{"x": [1.0, 1.0], "y": [0.0]}
+```
+
+**Example:**
+```bash
+nynet train -s network.bin -f training_data.jsonl -e 1000 -l training_logs.jsonl
+```
+
+After training, the network state is automatically saved back to the state file.
+
+### 3. `test` - Test a Neural Network
+Evaluates a trained network on test data and generates predictions.
+
+**Syntax:**
+```bash
+nynet test -s <state> -f <file> -o <output>
+```
+
+**Options:**
+- `-s, --state <path>` **(required)** - Path to the trained network state file
+- `-f, --file <path>` **(required)** - Path to test data file (JSONL format)
+- `-o, --output <path>` **(required)** - Path where predictions will be saved (JSONL format)
+
+**Test Data Format (JSONL):**
+Each line contains one test sample (only input, no target):
+```jsonl
+{"x": [0.0, 0.0]}
+{"x": [0.0, 1.0]}
+{"x": [1.0, 0.0]}
+{"x": [1.0, 1.0]}
+```
+
+**Output Format (JSONL):**
+Predictions are saved with the same structure:
+```jsonl
+{"output": [0.05]}
+{"output": [0.95]}
+{"output": [0.92]}
+{"output": [0.08]}
+```
+
+**Example:**
+```bash
+nynet test -s network.bin -f test_data.jsonl -o predictions.jsonl
+```
+
+## Example: XOR Problem
+
+### Step 1: Create the network
+Create `config.jsonl`:
+```jsonl
+{"inputs": 2, "hidden": [3, 3], "outputs": 1, "hidden_func": "relu", "outputs_func": "sigmoid", "lr": 0.001}
+```
+
+Create the network:
+```bash
+nynet new -s config.jsonl -d network.bin
+```
+
+### Step 2: Prepare training data
+Create `training.jsonl`:
+```jsonl
+{"x": [0.0, 0.0], "y": [0.0]}
+{"x": [0.0, 1.0], "y": [1.0]}
+{"x": [1.0, 0.0], "y": [1.0]}
+{"x": [1.0, 1.0], "y": [0.0]}
+```
+
+### Step 3: Train the network
+```bash
+nynet train -s network.bin -f training.jsonl -e 5000 -l training_logs.jsonl
+```
+
+### Step 4: Test the network
+Create `test.jsonl`:
+```jsonl
+{"x": [0.0, 0.0]}
+{"x": [0.0, 1.0]}
+{"x": [1.0, 0.0]}
+{"x": [1.0, 1.0]}
+```
+
+Run the test:
+```bash
+nynet test -s network.bin -f test.jsonl -o predictions.jsonl
+```
+
+View the predictions:
+```bash
+cat predictions.jsonl
+```
+(Should be close to their target values)
+
+## Supported Activation Functions
+- **ReLU** - Rectified Linear Unit: `relu`
+- **Sigmoid** - Sigmoid: `sigmoid`
+- **Tanh** - Hyperbolic Tangent: `tanh`
+
+## Data Format Notes
+- All numeric values use 64-bit floating point (double)
+- JSONL format: JSON Lines (one JSON object per line)
+- Although considered portable, has some limits in save/load functions (cpu architecture limit)
+- Empty lines in JSONL files are automatically skipped
+
+# Architecture
+
+## Neural Network Structure
+nynet-cli implements a standard feedforward artificial neural network with the following components:
+
+### Neurons
+The fundamental unit of the network:
+- Each neuron has customizable weights and a bias term
+- Weights are initialized using He initialization: $\text{weights} \sim \text{Uniform}(-\sqrt{\frac{2}{n}}, \sqrt{\frac{2}{n}})$ (where n is number of inputs)
+- Supports linear combination followed by non-linear activation
+
+### Layers
+Organized collections of neurons:
+- **Input Layer** - No activation, directly passes input values
+- **Hidden Layers** - Multiple configurable layers with customizable activation functions
+- **Output Layer** - Final layer with user-defined activation function
+
+### Activation Functions
+- **ReLU** - $f(x) = \max(0, x)$ - Used by default in hidden layers for non-linearity
+- **Sigmoid** - $f(x) = \frac{1}{1 + e^{-x}}$ - Used by default in output layer for probability-like outputs
+- **Tanh** - $f(x) = \tanh(x)$ - Alternative activation with range [-1, 1]
+
+# License
+This project is licensed under the **Apache License 2.0**. See [LICENSE](LICENSE) file for details.
+
+### Quick Summary
+- ✅ You can use, modify, and distribute this software
+- ✅ Commercial use is permitted
+- ✅ You must include a copy of the license
+- ✅ You must state significant changes made to the code
+- ❌ Liability and warranty are disclaimed
+
+For the full legal text, see the [Apache 2.0 License](https://www.apache.org/licenses/LICENSE-2.0).

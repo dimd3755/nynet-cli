@@ -1,0 +1,41 @@
+# Prints help instructions
+nynet
+	params:
+		(N/A)
+
+
+# Made to create and save state for the neural network
+nynet new:
+	params:
+		# the source instructions of the network (eg. input & output size, functions, lr etc.)
+		-s/--src eg-source.jsonl
+		
+		# the network's state in binary format which can be read by the network
+		-d/--dst eg-destination.bin
+
+# The training function of the network
+nynet train:
+	params:
+		# the network's state in binary format which contains the neurons settings
+		-st/--state eg-state.bin
+		
+		# the training data file in jsonl format which contains x and y tensors in same line
+		-f/--file eg-data.jsonl
+
+		# (Optional) the training epoch amount (eg. 2500)
+		-e/--epoch 2500
+
+		# (Optional) the training logs eg (loss overtime, outputs, etc.)
+		-l/--logs eg-logs.jsonl
+
+# The main testing function of the network
+nynet test:
+	params:
+		# the network's state in binary format which contains the neurons settings 
+		-st/--state eg-state.bin
+
+		# the test data in jsonl format which contains x tensor
+		-f/--file eg-data.jsonl
+		
+		# the output which contains the result of the given data
+		-o/--out eg-output.jsonl
