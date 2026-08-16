@@ -26,9 +26,9 @@ This tool was created using the listed dependencies:
 3. C++ Compiler (eg. GNU, Clang, MSVC) for compiling the project into binary.
 
 # Set up
-First you need to clone the project with git, (or just download the [.zip](https://github.com/dimd3755/NeuralNetwork/archive/refs/heads/master.zip) file):
+First you need to clone the project with git, (or just download the [.zip](https://github.com/dimd3755/nynet-cli/archive/refs/heads/master.zip) file):
 
-    git clone https://github.com/dimd3755/NeuralNetwork
+    git clone https://github.com/dimd3755/nynet-cli
 
 
 Once you are inside the repository, use cmake to build the project:
