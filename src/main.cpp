@@ -101,7 +101,7 @@ int main(int argc, char** argv) {
 
         try {
             std::ofstream logs_file_stream;
-            if (app.count("--logs") > 0) {
+            if (subc_train->count("--logs") > 0) {
                 logs_file_stream.open(logs_file);
                 if (!logs_file_stream.is_open()) {
                     std::cerr << "Failed to open logs file." << '\n';
@@ -173,6 +173,10 @@ int main(int argc, char** argv) {
             nn.forward(x);
 
             json j2 = json{{"output", nn.get_output()}};
+
+            for (auto& c: nn.get_output()) { //DEBUG
+                std::cout << c << '\n';
+            } // END OF DEBUG
 
             output_file_stream << j2.dump() << '\n';
         }
