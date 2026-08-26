@@ -59,7 +59,7 @@ int main(int argc, char** argv) {
         }
 
         try {
-            std::ofstream dst_file_stream(dst_file);              
+            std::ofstream dst_file_stream(dst_file, std::ios::binary);
             if (!dst_file_stream.is_open()) {
                 std::cerr << "Failed to save state." << '\n';
                 return 1;
@@ -76,22 +76,29 @@ int main(int argc, char** argv) {
                 auto lr = j["lr"].get<double>();
                 
                 NeuralNetwork nn(inputs, hidden, outputs, string_to_activate_type(hidden_func), string_to_activate_type(outputs_func), lr);
-                nn.save(dst_file_stream);
+                if (!nn.save(dst_file_stream)) {
+                    std::cerr << "Failed to save state." << '\n';
+                    return 1;
+                }
             }
+            std::cout << "Successfully created binary state of network." << '\n';
         } catch (std::exception& e) {
             std::cerr << e.what() << '\n';
             return 1; 
         }
 
     } else if (subc_train->parsed()) {
-        std::ifstream state_file_istream(state_file);
+        std::ifstream state_file_istream(state_file, std::ios::binary);
         if (!state_file_istream.is_open()) {
             std::cerr << "Failed to open state file." << '\n';
             return 1;
         }
 
         NeuralNetwork nn;
-        nn.load(state_file_istream);
+        if (!nn.load(state_file_istream)) {
+            std::cerr << "Failed to load state file." << '\n';
+            return 1;
+        }
 
         std::vector<std::string> dst;
         if (!stream_file(data_file, dst)) {
@@ -131,26 +138,33 @@ int main(int argc, char** argv) {
                     }               
                 }
             }
+            std::cout << "Successfully trained network." << '\n';
         } catch (std::exception& e) {
             std::cerr << e.what() << '\n';
             return 1;
         }
-        std::ofstream state_file_ostream(state_file);      
+        std::ofstream state_file_ostream(state_file, std::ios::binary);
         if (!state_file_ostream.is_open()) {
             std::cerr << "Failed to open state file for saving." << '\n';
             return 1;
         }
-        nn.save(state_file_ostream);
+        if (!nn.save(state_file_ostream)) {
+            std::cerr << "Failed to save state file." << '\n';
+            return 1;
+        }
 
     } else if (subc_test->parsed()) {
-        std::ifstream state_file2_stream(state_file2);
+        std::ifstream state_file2_stream(state_file2, std::ios::binary);
         if (!state_file2_stream.is_open()) {
             std::cerr << "Failed to open state file." << '\n';
             return 1;
         }
 
         NeuralNetwork nn;
-        nn.load(state_file2_stream);
+        if (!nn.load(state_file2_stream)) {
+            std::cerr << "Failed to load state file." << '\n';
+            return 1;
+        }
 
         std::vector<std::string> dst;
         if (!stream_file(data_file2, dst)) {
@@ -174,12 +188,13 @@ int main(int argc, char** argv) {
 
             json j2 = json{{"output", nn.get_output()}};
 
-            for (auto& c: nn.get_output()) { //DEBUG
-                std::cout << c << '\n';
-            } // END OF DEBUG
+            //for (auto& c: nn.get_output()) { //DEBUG
+              //  std::cout << c << '\n';
+            //} // END OF DEBUG
 
             output_file_stream << j2.dump() << '\n';
         }
+        std::cout << "Successfully tested network." << '\n';
     }
 
     return 0;

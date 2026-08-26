@@ -76,7 +76,7 @@ nynet new -s <source> -d <destination>
 
 **Configuration File Format (JSONL):**
 ```jsonl
-{"inputs": 2, "hidden": [4, 4], "outputs": 1, "hidden_func": "relu", "outputs_func": "sigmoid", "lr": 0.01}
+{"inputs": <unsigned int>, "hidden": [<unsigned int>, <unsigned int>, ...], "outputs": <unsigned int>, "hidden_func": <string>, "outputs_func": <string>, "lr": <double>}
 ```
 
 **Parameters:**
@@ -85,11 +85,11 @@ nynet new -s <source> -d <destination>
 - `outputs` - Number of output neurons
 - `hidden_func` - Activation function for hidden layers: `relu`, `sigmoid`, or `tanh`
 - `outputs_func` - Activation function for output layer: `relu`, `sigmoid`, or `tanh`
-- `lr` - Learning rate (typically 0.001 to 0.1)
+- `lr` - Learning rate (e.g. 0.001 or 0.1)
 
 **Example:**
 ```bash
-nynet new -s network_config.jsonl -d network.bin
+nynet new -s config.jsonl -d state.bin
 ```
 
 ### 2. `train` - Train a Neural Network
@@ -107,17 +107,17 @@ nynet train -s <state> -f <file> [-e <epoch>] [-l <logs>]
 - `-l, --logs <path>` **(optional)** - Path where training logs will be saved (JSONL format)
 
 **Training Data Format (JSONL):**
-Each line contains one training sample:
+Each line contains one training sample in this format:
 ```jsonl
-{"x": [0.0, 0.0], "y": [0.0]}
-{"x": [0.0, 1.0], "y": [1.0]}
-{"x": [1.0, 0.0], "y": [1.0]}
-{"x": [1.0, 1.0], "y": [0.0]}
+{"x": [<double>, <double>, ...], "y": [<double>, ...]}
+{"x": [<double>, <double>, ...], "y": [<double>, ...]}
+{"x": [<double>, <double>, ...], "y": [<double>, ...]}
+{"x": [<double>, <double>, ...], "y": [<double>, ...]}
 ```
 
 **Example:**
 ```bash
-nynet train -s network.bin -f training_data.jsonl -e 1000 -l training_logs.jsonl
+nynet train -s state.bin -f training_data.jsonl -e 1000 -l training_logs.jsonl
 ```
 
 After training, the network state is automatically saved back to the state file.
@@ -136,26 +136,26 @@ nynet test -s <state> -f <file> -o <output>
 - `-o, --output <path>` **(required)** - Path where predictions will be saved (JSONL format)
 
 **Test Data Format (JSONL):**
-Each line contains one test sample (only input, no target):
+Each line contains one test sample (only input):
 ```jsonl
-{"x": [0.0, 0.0]}
-{"x": [0.0, 1.0]}
-{"x": [1.0, 0.0]}
-{"x": [1.0, 1.0]}
+{"x": [<double>, <double>, ...]}
+{"x": [<double>, <double>, ...]}
+{"x": [<double>, <double>, ...]}
+{"x": [<double>, <double>, ...]}
 ```
 
 **Output Format (JSONL):**
 Predictions are saved with the same structure:
 ```jsonl
-{"output": [0.05]}
-{"output": [0.95]}
-{"output": [0.92]}
-{"output": [0.08]}
+{"output": [<double>, ...]}
+{"output": [<double>, ...]}
+{"output": [<double>, ...]}
+{"output": [<double>, ...]}
 ```
 
 **Example:**
 ```bash
-nynet test -s network.bin -f test_data.jsonl -o predictions.jsonl
+nynet test -s state.bin -f test_data.jsonl -o predictions.jsonl
 ```
 
 ## Example: XOR Problem
@@ -213,7 +213,7 @@ cat predictions.jsonl
 ## Data Format Notes
 - All numeric values use 64-bit floating point (double)
 - JSONL format: JSON Lines (one JSON object per line)
-- Although considered portable, has some limits in save/load functions (cpu architecture limit)
+- Although meant to be portable, has some limits in save/load functions (cpu architecture limit)
 - Empty lines in JSONL files are automatically skipped
 
 # Architecture
@@ -228,7 +228,6 @@ The fundamental unit of the network:
 - Supports linear combination followed by non-linear activation
 
 ### Layers
-Organized collections of neurons:
 - **Input Layer** - No activation, directly passes input values
 - **Hidden Layers** - Multiple configurable layers with customizable activation functions
 - **Output Layer** - Final layer with user-defined activation function

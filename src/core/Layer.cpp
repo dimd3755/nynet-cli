@@ -62,3 +62,4 @@ bool Layer::load(std::istream& in) {
 const std::vector<double>& Layer::get_output() const {
     return outputs;
 }
+
