@@ -75,7 +75,7 @@ nynet new -s <source> -d <destination>
 - `-d, --dst <path>` **(required)** - Path where the network state will be saved (binary format)
 
 **Configuration File Format (JSONL):**
-```jsonl
+```
 {"inputs": <unsigned int>, "hidden": [<unsigned int>, <unsigned int>, ...], "outputs": <unsigned int>, "hidden_func": <string>, "outputs_func": <string>, "lr": <double>}
 ```
 
@@ -108,7 +108,7 @@ nynet train -s <state> -f <file> [-e <epoch>] [-l <logs>]
 
 **Training Data Format (JSONL):**
 Each line contains one training sample in this format:
-```jsonl
+```
 {"x": [<double>, <double>, ...], "y": [<double>, ...]}
 {"x": [<double>, <double>, ...], "y": [<double>, ...]}
 {"x": [<double>, <double>, ...], "y": [<double>, ...]}
@@ -137,7 +137,7 @@ nynet test -s <state> -f <file> -o <output>
 
 **Test Data Format (JSONL):**
 Each line contains one test sample (only input):
-```jsonl
+```
 {"x": [<double>, <double>, ...]}
 {"x": [<double>, <double>, ...]}
 {"x": [<double>, <double>, ...]}
@@ -146,7 +146,7 @@ Each line contains one test sample (only input):
 
 **Output Format (JSONL):**
 Predictions are saved with the same structure:
-```jsonl
+```
 {"output": [<double>, ...]}
 {"output": [<double>, ...]}
 {"output": [<double>, ...]}
@@ -162,7 +162,7 @@ nynet test -s state.bin -f test_data.jsonl -o predictions.jsonl
 
 ### Step 1: Create the network
 Create `config.jsonl`:
-```jsonl
+```
 {"inputs": 2, "hidden": [3, 3], "outputs": 1, "hidden_func": "relu", "outputs_func": "sigmoid", "lr": 0.001}
 ```
 
@@ -173,7 +173,7 @@ nynet new -s config.jsonl -d network.bin
 
 ### Step 2: Prepare training data
 Create `training.jsonl`:
-```jsonl
+```
 {"x": [0.0, 0.0], "y": [0.0]}
 {"x": [0.0, 1.0], "y": [1.0]}
 {"x": [1.0, 0.0], "y": [1.0]}
@@ -187,7 +187,7 @@ nynet train -s network.bin -f training.jsonl -e 5000 -l training_logs.jsonl
 
 ### Step 4: Test the network
 Create `test.jsonl`:
-```jsonl
+```
 {"x": [0.0, 0.0]}
 {"x": [0.0, 1.0]}
 {"x": [1.0, 0.0]}
